@@ -92,13 +92,19 @@ while True:
     for cars_loc1, cars_loc2 in cars_available:
         max_rwd = 0
         for act in actions:
-            act_state_1, act_state_2 = cars_loc1 - act, cars_loc2 + act
-            if act_state_1 < 0 or act_state_1 > 20 or act_state_2 < 0 or act_state_2 > 20:
-                continue    #actual state will come from going to a different point
-            vst = -2 * np.abs(act) + V[act_state_1][act_state_2]
-            if vst > max_rwd:
-                max_rwd = vst
-                action_space[cars_loc1][cars_loc2] = act
+            for emp_act in range(1):
+                act_state_1, act_state_2 = cars_loc1 - act + emp_act, cars_loc2 + act - emp_act
+                if act_state_1 < 0 or act_state_1 > 20 or act_state_2 < 0 or act_state_2 > 20:
+                    continue    #actual state will come from going to a different point
+                vst = -2 * np.abs(act) + V[act_state_1][act_state_2]
+                if act_state_1 > 10:
+                    vst += -4
+                if act_state_2 > 10:
+                    vst += -4
+            
+                if vst > max_rwd:
+                    max_rwd = vst
+                    action_space[cars_loc1][cars_loc2] = act
     # im.set_data(action_space)
     # ax.set_title(f"Policy Iteration {pol_iter}")
     # plt.pause(2)
