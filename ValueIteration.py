@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-V = np.zeros(101)
-action_space = np.zeros(101)
+V = np.zeros(101, dtype=np.float32)
+action_space = np.zeros(101, dtype = np.int16)
 
 gamma = 1 
 prob_h = 0.4
