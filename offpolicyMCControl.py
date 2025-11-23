@@ -164,3 +164,6 @@ while iters < 10000:
         W = W*9
 #print (np.argmax(Q, axis=0))
 np.save("Qarray.npy", Q)
+
+#Some other ideas for getting off policy importance sampled MC control working is to store episodes and then replay them after covering reasonable portion of the state space
+
