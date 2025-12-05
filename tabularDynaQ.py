@@ -34,7 +34,7 @@ def action_to_idx(act):
     return action_to_idx
 
 np.random.seed(42)
-n = 0
+n = 10
 Q = np.random.randn(4,6,9)
 # Q[3,:,:] = 10
 # Q[0,:,8] = 20
