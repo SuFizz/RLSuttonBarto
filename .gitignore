@@ -182,3 +182,4 @@ cython_debug/
 .cursorindexingignore
 generatedValueIter.py
 generatedValueIterClaude.png
+*generated*
