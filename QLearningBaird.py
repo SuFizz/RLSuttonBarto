@@ -31,22 +31,26 @@ def pi (action, state):
     if action == max_states - 1:
         return 1
 
-weights = jax.random.randint(sub_key, (8,), 0, max_states+1)
+weights = jnp.abs(jax.random.normal(sub_key, (8,)))
 print ("Start")
-for episode in range(3000):
+for episode in range(2):
     new_key, sub_key = jax.random.split(sub_key)
-    present_states = jax.random.randint(sub_key, (), 0, max_states-1) # because state 6 is terminal
-    next_state = max_states - 1
-    max_qsa = 0
-    for act in range(max_actions):
-        qval = q_value(next_state, act, weights)
-        if max_qsa < qval:
-            max_qsa = qval
-    # print ("\n",alpha, gamma, max_qsa, q_value(present_states, max_actions-1, weights), get_features(present_states, max_actions-1))
-    weights += alpha * (0 + gamma*max_qsa - q_value(present_states, max_actions-1, weights))*get_features(present_states, max_actions-1)
-    # print (weights)
-    summer = jnp.sum(jnp.abs(weights))
-    print (f"\rsum Weights {summer} at {episode}", end="", flush=True)
-    if jnp.sum(jnp.abs(weights)) > 1e5:
-        print(f"Divergence at {episode}")
-        break
+    present_state = jax.random.randint(sub_key, (), 0, max_states-1) # because state 6 is terminal
+    for i in range(2000):
+        new_key, sub_key = jax.random.split(sub_key)
+        next_state = jax.random.randint(sub_key, (), 0, max_states-1) # because state 6 is terminal
+        max_qsa = 0
+        for act in range(max_actions-1, max_actions):
+            qval = q_value(next_state, act, weights)
+            if max_qsa < qval:
+                max_qsa = qval
+        # print ("\n","ps", present_state, next_state, max_qsa, q_value(present_state, next_state, weights), get_features(present_state, next_state))
+        # print(weights)
+        weights += alpha * (0 + gamma*max_qsa - q_value(present_state, next_state, weights))*get_features(present_state, next_state)
+        # print (weights)
+        summer = jnp.sum(jnp.abs(weights))
+        print (f"\rsum Weights {summer} at {episode} in {i}", end="", flush=True)
+        present_state = next_state
+        if summer > 1e5:
+            print(f"Divergence at {episode} at iter-{i}")
+            break
